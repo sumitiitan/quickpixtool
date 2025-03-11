@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Tools</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffdde1, #fbc2eb, #a18cd1);
+            animation: moveBackground 10s infinite alternate linear;
+        }
+
+        @keyframes moveBackground {
+            0% { background-position: 0 0; }
+            100% { background-position: 100vw 100vh; }
+        }
+
+        /* Light Navbar */
+        .navbar {
+            background-color: #ffffff;
+            padding: 15px;
+            color: black;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background: #ddd;
+        }
+
+        /* Container */
+        .container {
+            margin-top: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .box {
+            position: relative;
+            width: 40%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            border: 2px dashed #aaa;
+            transition: transform 0.3s, background 0.3s;
+            text-align: center;
+            overflow: hidden;
+            font-size: 24px;
+        }
+
+        /* Different Background Colors */
+        .box:nth-child(1) { background: #fce4ec; } /* Light Pink */
+        .box:nth-child(2) { background: #e3f2fd; } /* Light Blue */
+        .box:nth-child(3) { background: #f3e5f5; } /* Light Purple */
+        .box:nth-child(4) { background: #ffecb3; } /* Light Yellow */
+        .box:nth-child(5) { background: #c8e6c9; } /* Light Green */
+        .box:nth-child(6) { background: #fff9c4; } /* Light Cream */
+
+        .box:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        /* BIG Floating Emojis */
+        .emoji {
+            font-size: 50px;
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            animation: floatEmoji 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes floatEmoji {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+
+        /* BIG Central Emoji */
+        .big-emoji {
+            font-size: 80px;
+            margin-bottom: 10px;
+        }
+
+        /* About Section */
+        .about {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .box {
+                width: 80%;
+            }
+            .emoji {
+                font-size: 40px;
+                top: -10px;
+                right: -10px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Light Navigation Bar -->
+    <div class="navbar">
+        <div class="logo">🖼️ Image Tools</div>
+        <a href="contact.html">📞 Contact</a>
+    </div>
+
+    <div class="container">
+        <div class="box" onclick="location.href='compress.html'">
+            <span class="emoji">📉</span>
+            <div class="big-emoji">🗜️</div>
+            <h3>Image Compressor</h3>
+            <p>Compress your images without losing quality.</p>
+        </div>
+
+        <div class="box" onclick="location.href='crop.html'">
+            <span class="emoji">✂️</span>
+            <div class="big-emoji">🔲</div>
+            <h3>Image Crop</h3>
+            <p>Crop images with custom aspect ratios.</p>
+        </div>
+
+        <div class="box" onclick="location.href='resize.html'">
+            <span class="emoji">🔄</span>
+            <div class="big-emoji">📏</div>
+            <h3>Image Resizer</h3>
+            <p>Resize images while maintaining aspect ratio.</p>
+        </div>
+
+        <div class="box" onclick="location.href='convert-pdf.html'">
+            <span class="emoji">📜</span>
+            <div class="big-emoji">🖼️➡️📄</div>
+            <h3>Image to PDF</h3>
+            <p>Convert images into high-quality PDFs.</p>
+        </div>
+
+        <div class="box" onclick="location.href='pdf-editor.html'">
+            <span class="emoji">📝</span>
+            <div class="big-emoji">📑</div>
+            <h3>PDF Editor</h3>
+            <p>Edit and modify your PDF files online.</p>
+        </div>
+
+        <div class="box" onclick="location.href='rename.html'">
+            <span class="emoji">🖼️</span>
+            <div class="big-emoji">📡</div>
+            <h3>Image rename</h3>
+            <p>rename images while keeping proportions intact.</p>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="about">
+        <h2>About Image Tools 🚀</h2>
+        <p>
+            Welcome to the **ultimate image editing platform**, where we offer **six powerful tools** to help you manipulate and optimize your images effortlessly! 🎨 Whether you need to **compress, crop, resize, convert, edit, or stretch** an image, we have got you covered.
+        </p>
+    </div>
+
+</body>
+</html>

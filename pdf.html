@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to PDF Converter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffdde1);
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #fff;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            text-decoration: none;
+            font-size: 20px;
+            color: #333;
+            font-weight: bold;
+            margin: 0 20px;
+        }
+
+        /* Heading */
+        h1 {
+            margin-top: 80px;
+            font-size: 28px;
+        }
+
+        /* Upload Box */
+        .upload-box {
+            width: 60%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px dashed #333;
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        /* Preview & Convert Box */
+        .preview-box {
+            width: 60%;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .preview-box img {
+            max-width: 100px;
+            height: auto;
+            margin: 5px;
+            border-radius: 10px;
+        }
+
+        /* PDF Name Input */
+        .pdf-name-input {
+            width: 60%;
+            padding: 10px;
+            margin: 15px auto;
+            display: block;
+            border: 1px solid #333;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .convert-btn {
+            margin-top: 10px;
+            padding: 12px 20px;
+            background: #ff5733;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+        }
+
+        /* Tools Section */
+        .tools-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .tool-box {
+            width: 40%;
+            padding: 20px;
+            background: #fff;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            text-align: left;
+            border: 2px solid #ff5733;
+        }
+
+        .tool-box h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .tool-box p {
+            font-size: 14px;
+            color: gray;
+        }
+
+        .tool-box a {
+            text-decoration: none;
+            color: #ff5733;
+            font-weight: bold;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Floating Emojis */
+        .floating-emoji {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 25px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .preview-box, .upload-box, .tool-box {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="index.html">🌐 YourWebsiteName</a>
+        <a href="contact.html">📞 Contact</a>
+    </div>
+
+    <!-- Heading -->
+    <h1>📄 Image to PDF Converter</h1>
+
+    <!-- Upload Box -->
+    <div class="upload-box" onclick="document.getElementById('uploadInput').click()">
+        📂 Drag & Drop or Click to Upload Multiple Images
+        <input type="file" id="uploadInput" accept="image/*" multiple style="display: none;" onchange="previewImages(event)">
+    </div>
+
+    <!-- PDF Name Input -->
+    <input type="text" id="pdfName" class="pdf-name-input" placeholder="Enter PDF Name (optional)">
+
+    <!-- Preview & Convert Box -->
+    <div class="preview-box">
+        <h3>🖼️ Preview Images</h3>
+        <div id="imagePreviewContainer"></div>
+        <button class="convert-btn" onclick="convertToPDF()">📥 Convert to PDF</button>
+    </div>
+
+    <!-- Tools Section -->
+    <h2>⚒️ Most Usable Image Tools</h2>
+    <div class="tools-container">
+        <div class="tool-box"><span class="floating-emoji">📄</span>
+            <h3>Convert to PDF</h3><p>Convert images into high-quality PDFs</p>
+            <a href="pdf.html">Go to PDF Converter</a>
+        </div>
+        <div class="tool-box"><span class="floating-emoji">📏</span>
+            <h3>Resize Image</h3><p>Resize images without losing quality</p>
+            <a href="resize.html">Go to Resizer</a>
+        </div>
+        <div class="tool-box"><span class="floating-emoji">✂️</span>
+            <h3>Crop Image</h3><p>Easily crop images to custom sizes</p>
+            <a href="crop.html">Go to Crop Tool</a>
+        </div>
+        <div class="tool-box"><span class="floating-emoji">🗜️</span>
+            <h3>Compress Image</h3><p>Reduce file size while keeping quality</p>
+            <a href="compress.html">Go to Compressor</a>
+        </div>
+        <div class="tool-box"><span class="floating-emoji">📐</span>
+            <h3>Stretch Image</h3><p>rename  images proportionally</p>
+            <a href="rename.html">Go to rename Tool</a>
+        </div>
+        <div class="tool-box"><span class="floating-emoji">📝</span>
+            <h3>PDF Editor</h3><p>Edit PDF documents with ease</p>
+            <a href="pdf-editor.html">Go to PDF Editor</a>
+        </div>
+    </div>
+
+    <script>
+        let selectedImages = [];
+
+        function previewImages(event) {
+            selectedImages = [];
+            document.getElementById("imagePreviewContainer").innerHTML = "";
+
+            for (let file of event.target.files) {
+                let reader = new FileReader();
+                reader.onload = function () {
+                    let img = new Image();
+                    img.src = reader.result;
+                    img.style.maxWidth = "100px";
+                    img.style.margin = "5px";
+                    document.getElementById("imagePreviewContainer").appendChild(img);
+                    selectedImages.push(reader.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function convertToPDF() {
+            if (selectedImages.length === 0) {
+                alert("Please upload at least one image!");
+                return;
+            }
+
+            let { jsPDF } = window.jspdf;
+            let pdf = new jsPDF();
+            let pdfName = document.getElementById("pdfName").value.trim() || "converted";
+
+            selectedImages.forEach((image, index) => {
+                if (index > 0) pdf.addPage();
+                pdf.addImage(image, "JPEG", 0, 0, 210, 297);
+            });
+
+            pdf.save(pdfName + ".pdf");
+        }
+    </script>
+
+</body>
+</html>

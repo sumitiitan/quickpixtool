@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffdde1);
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #fff;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            padding: 0 10px;
+        }
+
+        /* Heading */
+        h1 {
+            margin-top: 80px;
+            font-size: 28px;
+        }
+
+        /* Upload Box */
+        .upload-box {
+            width: 60%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px dashed #333;
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        /* Resize Box */
+        .resize-box {
+            width: 60%;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .resize-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .resize-controls input {
+            width: 80px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .resize-controls button {
+            padding: 10px 20px;
+            background: #ff5733;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .download-btn {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #ff5733;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none;
+        }
+
+        /* Aspect Ratios */
+        .aspect-ratios {
+            width: 60%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .aspect-ratios table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .aspect-ratios th, .aspect-ratios td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .aspect-ratios th {
+            background: #ff5733;
+            color: white;
+        }
+
+        .aspect-ratios td {
+            border: 1px solid #ddd;
+        }
+
+        /* Tools Section */
+        .tools-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .tool-box {
+            width: 40%;
+            padding: 20px;
+            background: #fff;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 2px solid #ff5733;
+        }
+
+        .tool-box a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="#">🖼️ Image Resizer</a>
+        <a href="#">📞 Contact</a>
+    </div>
+
+    <!-- Heading -->
+    <h1>🔥 Image Resizer 🔥</h1>
+
+    <!-- Upload Box -->
+    <div class="upload-box" onclick="document.getElementById('uploadInput').click()">
+        📂 Drag & Drop Image Here or Click to Upload
+        <input type="file" id="uploadInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
+    </div>
+
+    <!-- Resize Box -->
+    <div class="resize-box">
+        <h3>Resize Your Image</h3>
+        <img id="previewImage" src="" alt="Uploaded Image">
+        <div class="resize-controls">
+            <input type="number" id="resizeWidth" placeholder="Width">
+            <input type="number" id="resizeHeight" placeholder="Height">
+            <button onclick="resizeImage()">Resize</button>
+        </div>
+        <a id="downloadBtn" download="resized-image.png" class="download-btn">📥 Download Resized Image</a>
+    </div>
+
+    <!-- Aspect Ratios Table -->
+    <div class="aspect-ratios">
+        <h3>Predefined Aspect Ratios</h3>
+        <table>
+            <tr>
+                <th>Aspect Ratio</th>
+                <th>Apply</th>
+            </tr>
+            <tr>
+                <td>16:9 📺</td>
+                <td><button onclick="setAspectRatio(16,9)">Apply</button></td>
+            </tr>
+            <tr>
+                <td>9:16 📱</td>
+                <td><button onclick="setAspectRatio(9,16)">Apply</button></td>
+            </tr>
+            <tr>
+                <td>1:1 🔲</td>
+                <td><button onclick="setAspectRatio(1,1)">Apply</button></td>
+            </tr>
+            <tr>
+                <td>3:4 🖼️</td>
+                <td><button onclick="setAspectRatio(3,4)">Apply</button></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Most Usable Image Tools -->
+    <h2> 🔥 Most Usable Image Tools 🔥 </h2>
+    <div class="tools-container">
+        <div class="tool-box"><a href="pdf.html">📄 Image to PDF</a></div>
+        <div class="tool-box"><a href="crop.html">✂️ Crop Image</a></div>
+        <div class="tool-box"><a href="compress.html">📉 Image Compress</a></div>
+        <div class="tool-box"><a href="resize.html">📏 Image Resize</a></div>
+        <div class="tool-box"><a href="strech.html">📐 Image Stretch</a></div>
+        <div class="tool-box"><a href="pdf-editor.html">📝 PDF Editor</a></div>
+    </div>
+
+    <script>
+        function previewImage(event) {
+            let reader = new FileReader();
+            reader.onload = function () {
+                document.getElementById('previewImage').src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function setAspectRatio(w, h) {
+            document.getElementById("resizeWidth").value = w * 100;
+            document.getElementById("resizeHeight").value = h * 100;
+        }
+    </script>
+    <script>
+    let originalImage = null;
+
+    function previewImage(event) {
+        let reader = new FileReader();
+        reader.onload = function () {
+            let img = new Image();
+            img.src = reader.result;
+            img.onload = function () {
+                originalImage = img;
+                document.getElementById('previewImage').src = reader.result;
+            };
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function resizeImage() {
+        if (!originalImage) {
+            alert("Please upload an image first!");
+            return;
+        }
+
+        let width = parseInt(document.getElementById("resizeWidth").value);
+        let height = parseInt(document.getElementById("resizeHeight").value);
+
+        if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+            alert("Please enter valid width and height!");
+            return;
+        }
+
+        let canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        let ctx = canvas.getContext("2d");
+        ctx.drawImage(originalImage, 0, 0, width, height);
+
+        let resizedImageUrl = canvas.toDataURL("image/png");
+        document.getElementById("previewImage").src = resizedImageUrl;
+
+        let downloadBtn = document.getElementById("downloadBtn");
+        downloadBtn.href = resizedImageUrl;
+        downloadBtn.style.display = "inline-block";
+    }
+
+    function setAspectRatio(w, h) {
+        let newWidth = 200; // Default Width
+        let newHeight = Math.round((newWidth / w) * h);
+        document.getElementById("resizeWidth").value = newWidth;
+        document.getElementById("resizeHeight").value = newHeight;
+    }
+</script>
+
+
+</body>
+</html>

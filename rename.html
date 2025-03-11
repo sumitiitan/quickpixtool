@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rename Image & Change Format</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body {
+            text-align: center;
+            background: linear-gradient(45deg, #e0eafc, #cfdef3);
+            animation: moveBg 5s infinite alternate;
+            padding: 20px;
+            transition: background 0.5s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes moveBg {
+            0% { background-position: left; }
+            100% { background-position: right; }
+        }
+
+        /* Moving Emojis */
+        .emoji {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.6;
+            animation: float 5s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar a {
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        h1 { margin: 20px 0; }
+
+        .upload-box {
+            width: 50%; margin: 20px auto;
+            padding: 20px; border: 2px dashed #333;
+            background: #fff; border-radius: 10px;
+            cursor: pointer; font-size: 18px;
+        }
+
+        .preview-container {
+            margin: 20px auto; padding: 15px;
+            background: white; border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            text-align: center;
+        }
+
+        img { max-width: 100%; height: auto; margin-top: 10px; }
+
+        .input-group {
+            margin: 10px 0; display: flex; align-items: center; justify-content: center;
+            gap: 10px;
+        }
+
+        input, select, button {
+            padding: 8px; font-size: 16px;
+            border-radius: 5px; border: 1px solid #333;
+        }
+
+        button {
+            cursor: pointer; background: #28a745; color: white;
+            font-weight: bold; border: none; padding: 10px 15px;
+        }
+        
+        .download-btn { background: #ff5733; }
+
+        /* Most Usable Tools Section */
+        .tools-section {
+            margin-top: 40px;
+        }
+
+        .tools-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tool-box {
+            width: 40%;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        .tool-box:hover {
+            transform: translateY(-5px);
+            background: #f0f0f0;
+        }
+
+        .tool-box a {
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Moving Emojis -->
+    <div class="emoji" style="top: 10%; left: 5%;">📂</div>
+    <div class="emoji" style="top: 40%; right: 10%;">🖊️</div>
+    <div class="emoji" style="bottom: 20%; left: 15%;">📄</div>
+    <div class="emoji" style="bottom: 50%; right: 5%;">📸</div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="index.html">🌐 My Website</a>
+        <a href="contact.html">📞 Contact</a>
+    </div>
+
+    <h1>📷 Rename Image & Change Format</h1>
+
+    <!-- Upload Box -->
+    <div class="upload-box" onclick="document.getElementById('uploadInput').click()">
+        📂 Click or Drag & Drop Image Here
+        <input type="file" id="uploadInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
+    </div>
+
+    <!-- Preview Container -->
+    <div class="preview-container" id="previewContainer" style="display: none;">
+        <img id="previewImg">
+        <div class="input-group">
+            <input type="text" id="imageName" placeholder="Enter new name">
+            <select id="formatSelect">
+                <option value="jpeg">JPEG</option>
+                <option value="png">PNG</option>
+                <option value="gif">GIF</option>
+                <option value="bmp">BMP</option>
+                <option value="webp">WEBP</option>
+            </select>
+        </div>
+        <button class="download-btn" onclick="downloadImage()">Download</button>
+    </div>
+
+    <!-- Most Usable Tools Section -->
+    <div class="tools-section">
+        <h2>🛠️ Most Usable Tools</h2>
+        <div class="tools-container">
+            <div class="tool-box"><a href="pdf.html">📄 PDF Converter</a></div>
+            <div class="tool-box"><a href="crop.html">✂️ Crop Image</a></div>
+            <div class="tool-box"><a href="resize.html">📏 Resize Image</a></div>
+            <div class="tool-box"><a href="compress.html">📉 Compress Image</a></div>
+            <div class="tool-box"><a href="pdf-editor.html">🖊️ PDF Editor</a></div>
+            <div class="tool-box"><a href="stretch.html">🔍 Stretch Image</a></div>
+        </div>
+    </div>
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById("previewImg").src = reader.result;
+                document.getElementById("previewContainer").style.display = "block";
+                document.getElementById("imageName").value = file.name.split('.').slice(0, -1).join('.');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function downloadImage() {
+            const newName = document.getElementById("imageName").value;
+            const format = document.getElementById("formatSelect").value;
+            const image = document.getElementById("previewImg").src;
+
+            if (!newName) {
+                alert("Please enter a name!");
+                return;
+            }
+
+            const link = document.createElement("a");
+            link.href = image;
+            link.download = `${newName}.${format}`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+
+</body>
+</html>

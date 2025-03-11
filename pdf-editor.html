@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to Image Extractor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body {
+            background: linear-gradient(45deg, #e0eafc, #cfdef3);
+            text-align: center;
+            overflow: auto;
+            background-size: 300% 300%;
+            animation: moveBg 10s linear infinite;
+        }
+        @keyframes moveBg { 0% {background-position: 0 0;} 100% {background-position: 1000px 1000px;} }
+        
+        .navbar {
+            display: flex; justify-content: space-between;
+            padding: 15px; background: #fff;
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar a { text-decoration: none; font-size: 20px; color: #333; font-weight: bold; margin: 0 10px; }
+
+        h1 { margin-top: 80px; font-size: 28px; }
+        .upload-box {
+            width: 60%; margin: 20px auto; padding: 20px;
+            border: 2px dashed #333; border-radius: 10px;
+            background: #fff; cursor: pointer;
+        }
+        
+        .image-container {
+            width: 90%; margin: 20px auto;
+        }
+
+        /* Table for extracted images */
+        table {
+            width: 90%; margin: 20px auto; border-collapse: collapse;
+            background: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background: #ff5733; color: white; }
+
+        img { max-width: 150px; height: auto; }
+        
+        .action-btn {
+            padding: 5px 10px; margin: 5px; cursor: pointer;
+            border: none; border-radius: 5px;
+            color: white; font-weight: bold;
+        }
+        .remove-btn { background: #ff3333; }
+        .replace-btn { background: #3399ff; }
+        .download-btn { background: #28a745; }
+
+        /* Tool Containers */
+        .tool-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 40px auto;
+        }
+
+        .tool-box {
+            width: 30%;
+            padding: 20px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .tool-box:hover { transform: scale(1.05); }
+        .tool-box a { text-decoration: none; font-size: 18px; font-weight: bold; color: #333; display: block; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="index.html">📄 My Website</a>
+        <a href="contact.html">📞 Contact</a>
+    </div>
+
+    <!-- Heading -->
+    <h1>PDF to Image Extractor</h1>
+
+    <!-- Upload Box -->
+    <div class="upload-box" onclick="document.getElementById('uploadInput').click()">
+        📂 Drag & Drop PDF Here or Click to Upload
+        <input type="file" id="uploadInput" accept="application/pdf" style="display: none;" onchange="extractImages(event)">
+    </div>
+
+    <!-- Extracted Images Table -->
+    <div class="image-container">
+        <table id="imageTable">
+            <thead>
+                <tr>
+                    <th>Extracted Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="imageBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Most Usable Image Tools -->
+    <h2>🛠️ Most Usable Image Tools</h2>
+    <div class="tool-container">
+        <div class="tool-box"><a href="compress.html">📏 Image Compressor</a></div>
+        <div class="tool-box"><a href="crop.html">✂️ Image Cropper</a></div>
+        <div class="tool-box"><a href="resize.html">📐 Image Resizer</a></div>
+        <div class="tool-box"><a href="pdf.html">📄 PDF Converter</a></div>
+        <div class="tool-box"><a href="pdf-editor.html">📝 PDF Editor</a></div>
+        <div class="tool-box"><a href="stretch.html">🔍 Image Stretch</a></div>
+    </div>
+
+    <script>
+        async function extractImages(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function() {
+                const typedArray = new Uint8Array(reader.result);
+                const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                const imageBody = document.getElementById("imageBody");
+                imageBody.innerHTML = "";
+
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const scale = 2;
+                    const viewport = page.getViewport({ scale });
+                    const canvas = document.createElement("canvas");
+                    const context = canvas.getContext("2d");
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    await page.render({ canvasContext: context, viewport }).promise;
+
+                    const imgSrc = canvas.toDataURL("image/png");
+                    
+                    // Create Table Row
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><img src="${imgSrc}" class="extracted-img"></td>
+                        <td>
+                            <button class="action-btn replace-btn" onclick="replaceImage(this)">Replace</button>
+                            <button class="action-btn remove-btn" onclick="removeImage(this)">Remove</button>
+                            <button class="action-btn download-btn" onclick="downloadImage('${imgSrc}')">Download</button>
+                        </td>
+                    `;
+
+                    imageBody.appendChild(row);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function removeImage(button) {
+            button.closest("tr").remove();
+        }
+
+        function replaceImage(button) {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/*";
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function() {
+                    button.closest("tr").querySelector("img").src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+
+        function downloadImage(src) {
+            const a = document.createElement("a");
+            a.href = src;
+            a.download = "extracted-image.png";
+            a.click();
+        }
+    </script>
+
+</body>
+</html>
